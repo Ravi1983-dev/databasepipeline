@@ -1,14 +1,9 @@
 --Create the Login and then map to the Clidot_Prod database
 
-exec msdb.dbo.rds_restore_database 
-    @restore_db_name='Clidot_Prod', 
-    @s3_arn_to_restore_from='arn:aws:s3:::clouds3basic/td_InitialDB/ISHEmpty.bak';
-
-
 -- Step 1: Create server login
 IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = 'Clidot_Prod_isource')
 BEGIN
-    CREATE LOGIN Clidot_isource WITH PASSWORD = 'StrongPasswordHere';
+    CREATE LOGIN Clidot_Prod_isource WITH PASSWORD = 'StrongPasswordHere';
 END
 
 -- Step 2: Create user in specific database (change context)
