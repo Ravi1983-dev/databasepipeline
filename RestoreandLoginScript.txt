@@ -1,0 +1,25 @@
+
+exec msdb.dbo.rds_restore_database 
+    @restore_db_name='Clidot_Prod', 
+    @s3_arn_to_restore_from='arn:aws:s3:::clouds3basic/td_InitialDB/ISHEmpty.bak';
+
+
+-- Step 1: Create server login
+IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = 'Clidot_isource')
+BEGIN
+    CREATE LOGIN jenkins_user WITH PASSWORD = 'StrongPasswordHere';
+END
+
+-- Step 2: Create user in specific database (change context)
+USE YourTargetDatabase;
+GO
+
+-- Step 3: Create DB user and map to login
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'Clidot_isource')
+BEGIN
+    CREATE USER Clidot_isource FOR LOGIN Clidot_isource;
+    EXEC sp_addrolemember 'db_datareader', 'Clidot_isource';
+    EXEC sp_addrolemember 'db_datawriter', 'Clidot_isource';
+END
+
+
