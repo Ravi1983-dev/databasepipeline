@@ -1,3 +1,4 @@
+--Create the Login and then map to the Clidot_Prod database
 
 exec msdb.dbo.rds_restore_database 
     @restore_db_name='Clidot_Prod', 
